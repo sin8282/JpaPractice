@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.dto.Result;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
 import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
@@ -46,10 +47,12 @@ public class OrderSimpleApiController {
     }
 
     @GetMapping("api/v3/simple-orders")
-    public List<SimpleOrderDto> orderV3(){
-        return orderRepository.findAllWithMemberDelivery().stream()
+    public Result orderV3(){
+        List<SimpleOrderDto> collect =  orderRepository.findAllWithMemberDelivery().stream()
                 .map(SimpleOrderDto::new)
                 .collect(Collectors.toList());
+
+        return new Result(collect.size(), collect);
     }
 
     @GetMapping("api/v4/simple-orders")
