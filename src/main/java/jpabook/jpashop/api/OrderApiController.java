@@ -67,8 +67,12 @@ public class OrderApiController {
 
     @GetMapping("api/v4/orders")
     public List<OrderQueryDto> ordersV4(){
-
         return orderQueryRepository.findOrderQueryDtos();
+    }
+
+    @GetMapping("api/v5/orders")
+    public List<OrderQueryDto> ordersV5(){
+        return orderQueryRepository.findAllByDtoOptimizing();
     }
 
     @Getter // No serializer found error 뜨면 Getter가 없어서 그런것.

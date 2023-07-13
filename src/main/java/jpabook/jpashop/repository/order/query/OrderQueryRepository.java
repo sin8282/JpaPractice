@@ -5,10 +5,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * 핵심은 ToOne을 먼저 조회해서 컬럼의 조회를 최소화시키고(최선, fetch join 아님)
- * ToMany를 나중에 join하는 방식이다.
+ * findOrderQueryDtos : 핵심은 ToOne을 먼저 조회해서 컬럼의 조회를 최소화시키고(최선, fetch join 아님) ToMany를 나중에 join하는 방식이다.
+ * findAllByDtoOptimizing : where in 절을 이용해서 한번에 조회하는 방법을 이용한다.
 **/
 @Repository
 @RequiredArgsConstructor
@@ -42,5 +44,28 @@ public class OrderQueryRepository {
                         " join o.member m" +
                         " join o.delivery d", OrderQueryDto.class)
                 .getResultList();
+    }
+
+
+    public List<OrderQueryDto> findAllByDtoOptimizing() {
+        List<OrderQueryDto> result = findOrders();
+
+        List<Long> orderIds = result.stream()
+                .map(o -> o.getOrderId())
+                .collect(Collectors.toList());
+
+        List<OrderItemQueryDto> orderItems = em.createQuery(
+                        "select new jpabook.jpashop.repository.order.query.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count)" +
+                                " from OrderItem oi" +
+                                " join oi.item i" +
+                                " where oi.order.id in :orderIds", OrderItemQueryDto.class)
+                .setParameter("orderIds", orderIds)
+                .getResultList();
+
+        Map<Long, List<OrderItemQueryDto>> orderItemsMap = orderItems.stream()
+                .collect(Collectors.groupingBy(dto -> dto.getOrderId()));
+
+        result.forEach(o-> o.setOrderItems(orderItemsMap.get(o.getOrderId())));
+        return result;
     }
 }
