@@ -95,7 +95,32 @@ public class OrderRepository {
     }
 
     public List<Order> findAllWithMemberDelivery() {
-        return em.createQuery("select o from Order o join fetch o.member m join fetch o.delivery d", Order.class)
+        return em.createQuery("select o from Order o " +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
                 .getResultList();
     }
+
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery("select o from Order o " +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public List<Order> findAllWithItem() { // distinct를 통해서 중복을 제거한다 이때 distinct는 db에서 사용하는 것과는 다르다 object를 직접적으로 중복인걸 제거
+        //일대다를 fetch join하면 페이징이 안된다. 왜냐 distinct를 해도 db에 나오는 건 전체 건수 즉, 다의 기준이므로 limit이나 rownum을 사용 불가능하므로...
+        //일대다는 페지 조인을 한개만 사용가능하다. list > list > list 여러개를 조회하게 할 수 없다. 데이터가 부정확해진다.
+        return em.createQuery(
+                "select distinct o from Order o " +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i ", Order.class)
+                .getResultList();
+    }
+
+
 }
