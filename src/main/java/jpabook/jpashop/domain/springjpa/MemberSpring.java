@@ -10,6 +10,8 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "username", "age"})
+//@NamedQuery(name = "MemberSpring.findByUsername", query = "select m from Member m where m.username = :username")
+//@NamedQuery로 Repository에서 불러와 사용할 순 있지만, 그냥 SpringJPA사용하자.
 public class MemberSpring {
     @Id
     @GeneratedValue

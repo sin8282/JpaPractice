@@ -6,7 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.InitBinder;
 
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,6 +60,28 @@ class MemberRepositoryTest {
 
         long deletedCount = memberRepository.count();
         assertThat(deletedCount).isEqualTo(0);
+
+    }
+
+    @Test
+    void queryMember(){
+        MemberSpring member1 = new MemberSpring("member1",10);
+        MemberSpring member2 = new MemberSpring("member2");
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        //findByUsername으로 Spring JPA가 알아서 매서드 이름보고 매핑해줌
+        List<MemberSpring> findMember1 = memberRepository.findByUsername("member1");
+        assertThat(findMember1.get(0).getUsername()).isEqualTo(member1.getUsername());
+        assertThat(findMember1.size()).isEqualTo(1);
+
+
+        List<MemberSpring> findMember2 = memberRepository.findByNames(Arrays.asList(new String[]{"member1", "member2"}));
+        assertThat(findMember2.size()).isEqualTo(2);
+
+
+        List<MemberSpring> findMember3 = memberRepository.findUser("member1",10 );
+        assertThat(findMember3.get(0)).isEqualTo(member1);
 
     }
 }
