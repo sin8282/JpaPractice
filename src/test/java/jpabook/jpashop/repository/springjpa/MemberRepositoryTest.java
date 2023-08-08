@@ -182,5 +182,8 @@ class MemberRepositoryTest {
 
         System.out.println("시간1 : " + findMember.getCreateDt());
         System.out.println("시간2 : " + findMember.getUpdateDt());
+        System.out.println("생성자1 : " + findMember.getCreateBy());
+        System.out.println("생성자2 : " + findMember.getUpdateBy());
+
     }
 }
