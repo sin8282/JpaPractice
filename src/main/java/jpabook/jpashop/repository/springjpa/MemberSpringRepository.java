@@ -14,7 +14,7 @@ import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberSpringRepository extends JpaRepository<MemberSpring, Long> {
+public interface MemberSpringRepository extends JpaRepository<MemberSpring, Long>, MemberSpringRepositoryCustom {
     //기본 사용법----------------------------------------------------------
     //domain에 named가있는지 확인하고 우선순위로 적용한다. (MemberSpring.findByUsername) 없으면 Spring method 쿼리 생성으로 진행
     List<MemberSpring> findByUsername(@Param("username") String username);

@@ -14,7 +14,7 @@ import javax.persistence.*;
 //@NamedQuery로 Repository에서 불러와 사용할 순 있지만, 그냥 SpringJPA사용하자.
 //@NamedEntityGraph(name = "MemberSpring.all", attributeNodes = @NamedAttributeNode("team"))
 //Repository에서 해당값을 불러와 사용가능 그냥 fetch join이나 @EntityGraph 이용하자.
-public class MemberSpring {
+public class MemberSpring extends JpaBaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "member_id")

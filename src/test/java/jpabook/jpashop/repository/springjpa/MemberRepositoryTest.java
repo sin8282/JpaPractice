@@ -162,4 +162,25 @@ class MemberRepositoryTest {
     }
 
 
+    @Test
+    void customRepository() {
+        memberRepository.findMemberCustom();
+    }
+
+    @Test
+    void jpaBaseEntity() throws InterruptedException {
+        MemberSpring member = new MemberSpring("member1"    );
+        memberRepository.save(member);
+
+        Thread.sleep(1000);
+        member.setUsername("member2");
+
+        em.flush();
+        em.clear();
+
+        MemberSpring findMember = memberRepository.findById(member.getId()).get();
+
+        System.out.println("시간1 : " + findMember.getCreateDt());
+        System.out.println("시간2 : " + findMember.getUpdateDt());
+    }
 }
