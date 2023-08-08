@@ -1,5 +1,6 @@
 package jpabook.jpashop.repository.springjpa;
 
+import jpabook.jpashop.domain.springjpa.ItemSpring;
 import jpabook.jpashop.domain.springjpa.MemberSpring;
 import jpabook.jpashop.dto.springjpa.MemberSpringDto;
 import org.assertj.core.api.Assertions;
@@ -184,6 +185,10 @@ class MemberRepositoryTest {
         System.out.println("시간2 : " + findMember.getUpdateDt());
         System.out.println("생성자1 : " + findMember.getCreateBy());
         System.out.println("생성자2 : " + findMember.getUpdateBy());
+    }
 
+    @Test
+    void persistableTest() {
+        em.persist(new ItemSpring("aa"));
     }
 }
